@@ -1,1 +1,34 @@
-<p>product-detail works!</p>
+<!--
+<div class="detail-container">
+  <div class="detail-item">
+    <img [src]="product.imageUrl" alt="{{ product.name }}" class="detail-image" />
+    <h2>{{ product.name }}</h2>
+    <p>{{ product.description }}</p>
+
+
+<select class="select-input" >
+      <option *for="let quantity of quantities" [value]="quantity">
+        {{ quantity }}
+      </option>
+    </select>
+
+    <button (click)="addToCart()">Add to Cart</button>
+    <a routerLink="/" class="back-link">Go Back</a>
+  </div>
+</div>
+
+<div class="cart-summary" *if="cart.length > 0">
+  <h3>Shopping Cart</h3>
+  <ul>
+    <li *for="let item of cart">
+
+    </li>
+  </ul>
+</div> -->
+<div *ngIf="loading">Loading products...</div>
+<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+<div *ngIf="!loading && !errorMessage">
+  <div *ngFor="let product of products">
+    <app-product-card [product]="product"></app-product-card>
+  </div>
+</div>

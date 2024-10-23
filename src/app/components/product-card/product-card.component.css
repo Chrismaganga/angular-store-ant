@@ -1,0 +1,29 @@
+.product-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e0e0e0;
+  padding: 16px;
+  margin: 10px;
+  text-align: center;
+
+  &__image img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  &__details {
+    margin-top: 10px;
+
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    p {
+      margin: 5px 0;
+    }
+
+    button {
+      margin-top: 10px;
+    }
+  }
+}

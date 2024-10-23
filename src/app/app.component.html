@@ -1,14 +1,11 @@
 <nz-layout class="app-layout">
-  <nz-sider class="menu-sidebar"
-    nzCollapsible
-    nzWidth="256px"
-    nzBreakpoint="md"
-    [(nzCollapsed)]="isCollapsed"
+  <nz-sider class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed"
     [nzTrigger]="null">
     <div class="sidebar-logo">
       <a href="https://ng.ant.design/" target="_blank">
         <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
         <h1>angular-store</h1>
+        <nz-icon nzType="menu-fold" nzTheme="outline"></nz-icon>
       </a>
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
@@ -30,6 +27,12 @@
           <li nz-menu-item nzMatchRouter>
             <a>notifications</a>
           </li>
+          <li>
+            <app-product-card *ngFor="let n of products" [id]="n.id" [name]="n.name" [image]="n.image" [price]="n.price"
+              [short_desc]="n.short_desc" [category]="n.category" [quantity]="n.quantity"
+              (onAdd)="cartService.addProduct($event)" </app-product-card>
+
+          </li>
         </ul>
       </li>
     </ul>
@@ -38,10 +41,7 @@
     <nz-header>
       <div class="app-header">
         <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
-            <span class="trigger"
-               nz-icon
-               [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-            ></span>
+          <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
         </span>
       </div>
     </nz-header>

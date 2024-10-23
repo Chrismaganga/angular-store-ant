@@ -1,1 +1,16 @@
-<p>checkout works!</p>
+<form [action]="checkoutForm" (ngSubmit)="onSubmit()">
+  <label for="name">Name</label>
+  <input id="name" formControlName="name" type="text" />
+
+  <label for="address">Address</label>
+  <input id="address" formControlName="address" type="text" />
+
+  <label for="paymentMethod">Payment Method</label>
+  <select id="paymentMethod" formControlName="paymentMethod">
+    <option value="credit">Credit Card</option>
+    <option value="paypal">PayPal</option>
+  </select>
+
+  <button type="submit" [disabled]="checkoutForm.invalid">Submit</button>
+</form>
+
