@@ -1,128 +1,63 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { ApiService } from './api.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Phone } from '../models/product';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  // Define the structure of cart data with type safety
-  cartData = {
-    products: [] as Array<{ id: number; price: number; quantity: number; image: string; title: string; maxQuantity: number }>,
-    total: 0,
-  };
+  private cartItems: Phone[] = [];
+  private cartTotal = new BehaviorSubject<number>(0);
+  private cartItemsSubject = new BehaviorSubject<Phone[]>([]);
 
-  // Observable to track cart data changes
-  cartDataObs$ = new BehaviorSubject(this.cartData);
+  constructor() {}
 
-  constructor(
-    private _notification: NzNotificationService,
-    private _api: ApiService
-  ) {
-    // Load cart data from localStorage, if available
-    const localCartData = localStorage.getItem('cart');
-    if (localCartData) {
-      this.cartData = JSON.parse(localCartData);
-      this.cartDataObs$.next(this.cartData); // Update observable with loaded data
-    }
+  // Get all products in the cart
+  getCart(): Observable<Phone[]> {
+    return this.cartItemsSubject.asObservable();
   }
 
-  submitCheckout(userId: any, cart: any) {
-    // POST request to create an order
-    return this._api.postTypeRequest('orders/create', {
-      userId: userId,
-      cart: cart,
-    });
-  }
+  // Add product to the cart
+  addToCart(product: Phone): void {
+    const existingProduct = this.cartItems.find((item) => item.id === product.id);
 
-  addProduct(params: { id: number; price: number; quantity?: number; image: string; title: string; maxQuantity: number }): void {
-    const { id, price, quantity = 1, image, title, maxQuantity } = params;
-    const product = { id, price, quantity, image, title, maxQuantity };
-
-    if (!this.isProductInCart(id)) {
-      // Add new product to cart
-      this.cartData.products.push(product);
+    if (existingProduct) {
+      // If product already exists, increase its quantity
+      existingProduct.quantity!++;
     } else {
-      // Update quantity of existing product
-      let updatedProducts = [...this.cartData.products];
-      let productIndex = updatedProducts.findIndex((prod) => prod.id === id);
-
-      // Update product quantity
-      updatedProducts[productIndex] = {
-        ...updatedProducts[productIndex],
-        quantity: updatedProducts[productIndex].quantity + quantity,
-      };
-
-      this.cartData.products = updatedProducts;
+      // Add new product with quantity 1
+      this.cartItems.push({ ...product, quantity: 1 });
     }
 
-    // Update total and notify the user
-    this.cartData.total = this.getCartTotal();
-    this._notification.create(
-      'success',
-      'Product added to cart',
-      `${title} was successfully added to the cart`
-    );
-    this.cartDataObs$.next({ ...this.cartData });
-    localStorage.setItem('cart', JSON.stringify(this.cartData));
+    // Update cart items and total
+    this.updateCart();
   }
 
-  updateCart(id: number, quantity: number): void {
-    // Update product quantity
-    const updatedProducts = [...this.cartData.products];
-    const productIndex = updatedProducts.findIndex((prod) => prod.id === id);
-
-    if (productIndex !== -1) {
-      updatedProducts[productIndex] = {
-        ...updatedProducts[productIndex],
-        quantity: quantity,
-      };
-      this.cartData.products = updatedProducts;
-      this.cartData.total = this.getCartTotal();
-      this.cartDataObs$.next({ ...this.cartData });
-      localStorage.setItem('cart', JSON.stringify(this.cartData));
-    }
+  // Remove product from the cart
+  removeFromCart(productId: number): void {
+    this.cartItems = this.cartItems.filter((item) => item.id !== productId);
+    this.updateCart();
   }
 
-  removeProduct(id: number): void {
-    // Remove product from cart
-    const updatedProducts = this.cartData.products.filter(
-      (prod) => prod.id !== id
-    );
-    this.cartData.products = updatedProducts;
-    this.cartData.total = this.getCartTotal();
-    this.cartDataObs$.next({ ...this.cartData });
-    localStorage.setItem('cart', JSON.stringify(this.cartData));
-
-    // Notify user
-    this._notification.create(
-      'success',
-      'Removed successfully',
-      'The selected item was removed from the cart successfully'
-    );
+  // Update the total price of the cart
+  updateCartTotal(): Observable<number> {
+    return this.cartTotal.asObservable();
   }
 
+  // Clear the cart
   clearCart(): void {
-    // Clear cart
-    this.cartData = {
-      products: [],
-      total: 0,
-    };
-    this.cartDataObs$.next({ ...this.cartData });
-    localStorage.setItem('cart', JSON.stringify(this.cartData));
+    this.cartItems = [];
+    this.updateCart();
   }
 
-  getCartTotal(): number {
-    // Calculate the total price of the cart
-    return this.cartData.products.reduce(
-      (totalSum, prod) => totalSum + prod.price * prod.quantity,
-      0
-    );
-  }
+  // Update cart items and total
+  private updateCart(): void {
+    this.cartItemsSubject.next(this.cartItems);
 
-  isProductInCart(id: number): boolean {
-    // Check if the product exists in the cart
-    return this.cartData.products.some((prod) => prod.id === id);
+    const total = this.cartItems.reduce((sum, item) => {
+      return sum + item.price * (item.quantity || 1);
+    }, 0);
+
+    this.cartTotal.next(total);
   }
 }

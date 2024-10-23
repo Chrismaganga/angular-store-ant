@@ -1,38 +1,45 @@
-import { Component, Input, Output, EventEmitter, input } from '@angular/core';
-import { Product } from '../../models/product'; // Ensure this is the correct path to your Product model
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Phone } from '../../models/product';
+
 
 @Component({
-  selector: 'app-product-card',
+  selector: 'app-phone-card',
   templateUrl: './product-card.component.html',
   styleUrls: ['./product-card.component.scss'],
 })
-export class ProductCardComponent {
+export class PhoneCardComponent {
+newItem(arg0: any) {
+throw new Error('Method not implemented.');
+}
   @Input() id!: number;
   @Input() title!: string;
   @Input() images!: string[];
   @Input() price!: number;
-  @Input() short_desc!: string; // Assuming this is in the Product model now
+  @Input() short_desc!: string; // Assuming this is in the Phone model now
   @Input() category!: string;
   @Input() quantity!: number;
-  @Input()description!: string;
+  @Input() description!: string;
   @Input() image: string | undefined = undefined;
-  @Output() onAdd = new EventEmitter<Product>(); // Emit the product when adding to cart
+  @Output() onAdd = new EventEmitter<Phone>(); // Emit the phone when adding to cart
+product: any;
+phone: any;
+
 
   addToCart() {
-    const product: Product = {
+    const phone: Phone = {
       id: this.id,
       title: this.title,
       price: this.price,
-      short_desc: this.short_desc, // Assuming this is in the Product model
+      short_desc: this.short_desc, // Assuming this is in the Phone model
       category: this.category,
       quantity: this.quantity,
       description: this.description,
       images: this.images,
       image: '',
       items: [],
-      totalCount: 0
+      totalCount: 0,
+      name: ''
     };
-    this.onAdd.emit(product); // Emit the product object using emit()
+    this.onAdd.emit(phone); // Emit the phone object using emit()
   }
 }
-

@@ -1,36 +1,33 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA, OnInit } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http'; // Import HttpErrorResponse
-import { Product } from '../../models/product';
-import { ProductService } from '../../services/products.service';
+
+import { Observable } from 'rxjs';
+import { PhoneService } from '../../services/products.service';
+import { Phone, Phones } from '../../models/product';
+import { error } from 'console';
 
 @Component({
-  selector: 'app-product-list',
+  selector: 'app-phone-list',
   templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css'],
+  styleUrls: ['./product-list.component.css']
+
 })
-export class ProductListComponent implements OnInit {
-  products: Product[] = [];
+export class PhoneListComponent implements OnInit {
+  phones: Phone[] = [];
   loading = false;
   errorMessage: string | null = null;
 
-  constructor(private productService: ProductService) {}
+  constructor(private phoneService: PhoneService) { }
 
   ngOnInit(): void {
-    this.fetchProducts();
+    this.fetchPhones();
+  }
+  fetchPhones() {
+    throw new Error('Method not implemented.');
   }
 
-  fetchProducts(): void {
-    this.loading = true;
-    this.productService['getProducts']().subscribe(
-      (data: Product[]) => {
-        this.products = data;
-        this.loading = false;
-      },
-      (error: HttpErrorResponse) => {
-        this.handleError(error);
-        this.loading = false;
-      }
-    );
+  addToCart(phone: Phone): any {
+    throw new Error('Method not implemented.');
   }
 
   handleError(error: HttpErrorResponse): void {
@@ -43,5 +40,7 @@ export class ProductListComponent implements OnInit {
       this.errorMessage = `Server-side error: ${error.status} - ${error.message}`;
     }
     console.error('Error occurred:', this.errorMessage);
+    // Display the error message to the user
+    alert(this.errorMessage);
   }
 }

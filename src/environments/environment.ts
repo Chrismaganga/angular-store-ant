@@ -1,4 +1,8 @@
+import { products } from "../assets/db";
+
+// src/environments/environment.ts
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/',
+  dataUrl: `https://jsonserver.reactbd.com/phone`, // Add this line
 };
+

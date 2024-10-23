@@ -1,13 +1,7 @@
-<div class="product-card">
-  <div class="product-card__image">
-    <img [src]="image" [alt]="name" />
-  </div>
-  <div class="product-card__details">
-    <h3>{{ name }}</h3> <!-- Use name instead of title -->
-    <p>{{ short_desc }}</p>
-    <p>Category: {{ category }}</p>
-    <p>Price: ${{ price }}</p>
-    <p>Available: {{ quantity }}</p>
-    <button nz-button (click)="addToCart()">Add to Cart</button>
-  </div>
+<div class="product-card" *for="let phone of phones">
+  {{phone.title}}
+  <p>Category: {{ phone.category }}</p>
+  <p>Price: ${{ phone.price }}</p>
+  <p>Available: {{ phone.quantity }}</p>
+  <button nz-button (click)="addToCart(phone)">Add to Cart</button>
 </div>

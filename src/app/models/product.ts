@@ -1,10 +1,11 @@
-export interface Products {
+export interface Phones {
   [x: string]: any;
   count: number;
-  products: Product[];
+  phones: Phone[];
 }
 
- export  interface Product {
+ export  interface Phone {
+  name: string;
   id: number;
   title: string;
   image: string;
@@ -14,6 +15,6 @@ export interface Products {
   quantity: number;
   description: string;
   images: string[];
-  items: Product[];
+  items: Phone[];
   totalCount: number;
 }

@@ -1,37 +1,41 @@
 <nz-layout class="app-layout">
-  <nz-sider class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed"
-    [nzTrigger]="null">
+  <nz-sider
+    class="menu-sidebar"
+    nzCollapsible
+    nzWidth="256px"
+    nzBreakpoint="md"
+    [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null"
+  >
     <div class="sidebar-logo">
-      <a href="https://ng.ant.design/" target="_blank">
-        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
-        <h1>angular-store</h1>
-        <nz-icon nzType="menu-fold" nzTheme="outline"></nz-icon>
-      </a>
+      <!-- <img src="../assets/images/logo.png" alt="logo" /> -->
     </div>
-    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+    <ul
+      nz-menu
+      nzTheme="dark"
+      nzMode="inline"
+      [nzInlineCollapsed]="isCollapsed"
+    >
       <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/welcome">Welcome</a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a>Products</a>
+            <a routerLink="/phones">Phones</a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a>Cart-items</a>
+            <a routerLink="/cart-items">Cart-items</a>
           </li>
         </ul>
       </li>
       <li nz-submenu nzOpen nzTitle="Form" nzIcon="form">
         <ul>
           <li nz-menu-item nzMatchRouter>
-            <a>notifications</a>
+            <a routerLink="/notifications">notifications</a>
           </li>
-          <li>
-            <app-product-card *ngFor="let n of products" [id]="n.id" [name]="n.name" [image]="n.image" [price]="n.price"
-              [short_desc]="n.short_desc" [category]="n.category" [quantity]="n.quantity"
-              (onAdd)="cartService.addProduct($event)" </app-product-card>
-
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/search-results">Search Results</a>
           </li>
         </ul>
       </li>
@@ -41,16 +45,17 @@
     <nz-header>
       <div class="app-header">
         <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
-          <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
+          <span
+            class="trigger"
+            nz-icon
+            [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+          ></span>
         </span>
       </div>
     </nz-header>
     <nz-content>
       <div class="inner-content">
-        <!-- <app-welcome></app-welcome> -->
-
         <router-outlet></router-outlet>
-
       </div>
     </nz-content>
   </nz-layout>

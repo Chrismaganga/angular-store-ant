@@ -1,32 +1,27 @@
 <div class="product-card">
-  <div class="product-card__image" routerLink="/product/{{ id }}">
-    <img src="{{ image }}" alt="" />
+  <div class="product-card__image">
+    <img [src]="product.image" alt="{{ product.title }}" />
+    <div class="quantity" *ngIf="product.quantity > 0">{{ product.quantity }}</div>
   </div>
+
   <div class="product-card__info">
     <header>
       <div class="title">
-        <div class="product-name">{{ title }}</div>
-        <div class="product-short-desc">{{ short_desc }}</div>
+        <div class="product-name">{{ product.title }}</div>
+        <div class="product-short-desc">{{ product.short_desc }}</div>
       </div>
-      <div class="product-price">{{ price | currency: "USD" }}</div>
+
+      <div class="product-price">{{ product.price }}</div>
     </header>
   </div>
+
   <div class="product-card__cta">
     <button
       nz-button
-      [disabled]="quantity === 0"
-      (click)="
-        onAdd({
-          id: id,
-          price: price,
-          image: image,
-          title: title,
-          quantity: quantity,
-          maxQuantity: quantity
-        })
-      "
+      [disabled]="product.quantity === 0"
+      (click)="newItem(phone)"
     >
-      {{ quantity === 0 ? "Out of stock" : "Add to cart" }}
+      {{ product.quantity === 0 ? 'Out of stock' : 'Add to cart' }}
     </button>
   </div>
 </div>

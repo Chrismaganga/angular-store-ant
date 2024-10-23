@@ -1,30 +1,36 @@
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  HostListener,
-} from '@angular/core';
-import { Product, Products } from '../../models/product'; // Ensure Product interface reflects the data structure
+import { Component, OnInit, ViewEncapsulation, HostListener } from '@angular/core';
+import { Phone } from '../../models/product';
+import { PhoneService } from '../../services/products.service';
 import { CartService } from '../../services/cart.service';
-import { ProductService } from '../../services/products.service';
+import { from, Observable, of } from 'rxjs';
+import { catchError, finalize, map, tap } from 'rxjs/operators';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-welcome',
   templateUrl: './welcome.component.html',
   styleUrls: ['./welcome.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [RouterModule], // Import RouterModule if you're using routerLink
 })
 export class WelcomeComponent implements OnInit {
-  products: Product[] = []; // Array to hold products
-  loading = false; // Loading indicator for initial fetch
-  additionalLoading = false; // Loading indicator for additional product fetch
-  productPageCounter = 1; // Counter for pagination
-  screenWidth!: number; // Screen width for responsive design
-  screenHeight!: number; // Screen height for responsive design
-  Products: Products;
+  phones: Phone[] = [];
+  loading = false;
+  additionalLoading = false;
+  phonePageCounter = 1;
+  screenWidth!: number;
+  screenHeight!: number;
+  category: string = '';
+  price: number = 0;
+  quantity: number = 0;
+  http: any;
+  apiUrl: any;
+phone: any;
+product: any;
 
   constructor(
-    private productService: ProductService,
+    private phoneService: PhoneService,
     private cartService: CartService
   ) {}
 
@@ -35,7 +41,12 @@ export class WelcomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeScreenSize();
-    this.fetchProducts();
+    this.fetchPhones();
+  }
+
+  fetchPhones(): void {
+    this.loading = true;
+    throw new Error('Method not implemented.');
   }
 
   initializeScreenSize(): void {
@@ -43,34 +54,17 @@ export class WelcomeComponent implements OnInit {
     this.screenHeight = window.innerHeight;
   }
 
-fetchProducts(): void {
-  this.loading = true;
-  this.productService.getAllProducts(9, this.productPageCounter).subscribe(
-    (res: Products) => { // Ensure this is Products type
-      this.Products = res; // Assign directly to products
-      this.loading = false; // Stop loading
-    },
-    (err) => {
-      console.error(err); // Log error
-      this.loading = false; // Stop loading
-    }
-  );
-}
+  addToCart(phone: Phone): void {
+    this.cartService.getCart().pipe(
+      map((cart: Phone[]) => cart.find((item: Phone) => item.id === phone.id))
+    ).subscribe((existingPhone: Phone | undefined) => {
+      if (existingPhone) {
+        existingPhone.quantity++;
+      } else {
+        this.cartService.addToCart({ ...phone, quantity: 1 });
+      }
 
-showMoreProducts(): void {
-  this.additionalLoading = true; // Start loading indicator
-  this.productPageCounter++; // Increment page counter
-
-  this.productService.getAllProducts(9, this.productPageCounter).subscribe(
-    (res: Products) => { // Ensure this is Products type
-      this.products = [...this.products, ...res]; // Merge new products
-      this.additionalLoading = false; // Stop loading
-    },
-    (err) => {
-      console.error(err); // Log error
-      this.additionalLoading = false; // Stop loading
-    }
-  );
-}
-
+      this.cartService.updateCartTotal();
+    });
+  }
 }

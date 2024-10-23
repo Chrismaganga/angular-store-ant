@@ -1,21 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Products } from '../models/product'; // Adjust the import path accordingly
-import { env } from 'process';
-import { environment } from '../../environments/environment';
+import { Phone } from '../models/product';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class ProductService {
-  private apiUrl = environment.apiUrl; // Your API URL
-  baseUrl: any;
-
-  constructor(private http: HttpClient) {}
-
-  getAllProducts(limit: number, page: number): Observable<Products> {
-    return this.http.get<Products>(`${this.apiUrl}/products?_limit=${limit}&_page=${page}`);
-      // return this.http.get(`${this.apiUrl}/products`);
+export class PhoneService {
+  getAllPhones(arg0: number, phonePageCounter: number) {
+    throw new Error('Method not implemented.');
   }
+
+  private apiUrl = 'https://jsonserver.reactbd.com/phone';
+
+  constructor(private http: HttpClient) { }
+
+  getPhone(id: number): Observable<Phone> {
+    return this.http.get<Phone>(`${this.apiUrl}/${id}`);
+  }
+
 }
